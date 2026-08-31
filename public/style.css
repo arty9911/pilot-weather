@@ -1,0 +1,490 @@
+:root {
+  --bg: #0A121C;
+  --panel: #101B29;
+  --panel-2: #16233420;
+  --line: #24384D;
+  --text: #E7EEF5;
+  --text-dim: #8FA3B8;
+  --amber: #F2A93B;
+  --cyan: #4FD7DA;
+  --vfr: #33C46A;
+  --mvfr: #3E8EF7;
+  --ifr: #E85D5D;
+  --lifr: #D06BE8;
+
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+}
+
+.app {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 12px 14px 40px;
+  min-height: 100vh;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 10px 2px 16px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 14px;
+}
+.brand-mark {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: 0.06em;
+  color: var(--amber);
+  margin-right: 10px;
+}
+.brand-sub {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.clock {
+  font-size: 13px;
+  color: var(--cyan);
+  letter-spacing: 0.05em;
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.tab {
+  flex: 1;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--text-dim);
+  padding: 10px 8px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.tab.active {
+  color: var(--bg);
+  background: var(--amber);
+  border-color: var(--amber);
+  font-weight: 600;
+}
+
+.hidden { display: none !important; }
+
+.searchbar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.searchbar input {
+  flex: 1;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--text);
+  padding: 12px 10px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  letter-spacing: 0.05em;
+}
+.searchbar input:focus { outline: 1px solid var(--amber); }
+.searchbar button {
+  background: var(--cyan);
+  color: #06222A;
+  border: none;
+  padding: 0 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  cursor: pointer;
+}
+
+.quicklist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.quicklist button {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--text-dim);
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  cursor: pointer;
+}
+.quicklist button:hover { border-color: var(--amber); color: var(--amber); }
+
+.location-btn {
+  display: block;
+  width: 100%;
+  background: transparent;
+  border: 1px dashed var(--cyan);
+  color: var(--cyan);
+  padding: 10px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  cursor: pointer;
+  margin-bottom: 12px;
+}
+.location-btn:hover { background: #0E2226; }
+.location-btn:disabled { opacity: 0.5; cursor: default; }
+
+.field-note {
+  font-size: 12px;
+  color: var(--text-dim);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.error {
+  background: #2A1418;
+  border: 1px solid var(--ifr);
+  color: var(--ifr);
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.headline {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.fltcat-badge {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #333;
+  color: #fff;
+  min-width: 56px;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+.fltcat-VFR { background: var(--vfr); color: #06210F; }
+.fltcat-MVFR { background: var(--mvfr); color: #05132B; }
+.fltcat-IFR { background: var(--ifr); color: #2A0808; }
+.fltcat-LIFR { background: var(--lifr); color: #26082B; }
+
+.headline-info { flex: 1; }
+.station-name { font-weight: 600; font-size: 15px; }
+.obs-time { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+
+.raw-toggle button {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--text-dim);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.raw-metar {
+  background: #060B12;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 12px;
+  color: var(--cyan);
+  white-space: pre-wrap;
+  word-break: break-all;
+  margin: 0 0 12px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.metric-label {
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+.metric-value {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+}
+.metric-value.small { font-size: 13px; font-weight: 500; line-height: 1.5; }
+
+.wind-wrap { display: flex; align-items: center; gap: 10px; }
+.compass { width: 56px; height: 56px; flex-shrink: 0; }
+
+.section-title {
+  font-size: 12px;
+  color: var(--amber);
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.crosswind-controls input {
+  width: 100px;
+  background: #060B12;
+  border: 1px solid var(--line);
+  color: var(--text);
+  padding: 8px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  margin-left: 8px;
+}
+.crosswind-controls label {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.crosswind-result {
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.rwy-diagram { width: 140px; height: 140px; display: block; margin: 10px auto 0; }
+
+.taf-body { font-size: 13px; line-height: 1.8; }
+.taf-period {
+  border-left: 3px solid var(--cyan);
+  padding-left: 10px;
+  margin-bottom: 10px;
+}
+.taf-period-time { color: var(--cyan); font-size: 12px; margin-bottom: 4px; }
+
+.disclaimer {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 30px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.airport-icon {
+  font-size: 16px;
+  text-align: center;
+  line-height: 20px;
+  filter: drop-shadow(0 0 2px #000);
+}
+.leaflet-popup-content {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: #16233A;
+  line-height: 1.6;
+}
+.popup-badge {
+  display: inline-block;
+  font-weight: 700;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #333;
+  color: #fff;
+  margin: 4px 0;
+}
+.popup-badge.fltcat-VFR { background: var(--vfr); color: #06210F; }
+.popup-badge.fltcat-MVFR { background: var(--mvfr); color: #05132B; }
+.popup-badge.fltcat-IFR { background: var(--ifr); color: #2A0808; }
+.popup-badge.fltcat-LIFR { background: var(--lifr); color: #26082B; }
+.popup-jump-btn {
+  margin-top: 6px;
+  background: var(--amber);
+  border: none;
+  padding: 5px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.radar-frame {
+  position: relative;
+  width: 100%;
+  height: 68vh;
+  min-height: 460px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #0d1620;
+  margin-bottom: 10px;
+}
+.radar-map-full {
+  position: absolute;
+  inset: 0;
+}
+
+/* 지도 위에 떠 있는 상단 컨트롤 (레이어 토글 + 내 위치) */
+.radar-overlay-top {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  z-index: 500;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  pointer-events: none;
+}
+.pill-group {
+  display: flex;
+  gap: 6px;
+  background: rgba(10,18,28,0.75);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 4px;
+  pointer-events: auto;
+}
+.pill-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 17px;
+  cursor: pointer;
+}
+.pill-btn.active {
+  background: var(--cyan);
+  color: #06222A;
+}
+.circle-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(10,18,28,0.75);
+  backdrop-filter: blur(6px);
+  color: var(--text);
+  font-size: 17px;
+  cursor: pointer;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.circle-btn:disabled { opacity: 0.4; }
+
+/* 지도 위에 떠 있는 하단 컨트롤 (재생 버튼 + 타임바) */
+/* 확대/축소 버튼이 하단 오버레이(재생/타임바)와 겹치지 않도록 여유 확보 */
+.leaflet-bottom.leaflet-left {
+  margin-bottom: 150px;
+}
+
+.radar-weather-row {
+  position: absolute;
+  left: 12px;
+  bottom: 92px;
+  z-index: 500;
+  background: rgba(10,18,28,0.8);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 8px 14px;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.radar-overlay-bottom {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 34px;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.play-btn {
+  width: 48px;
+  height: 48px;
+  font-size: 18px;
+  background: var(--amber);
+  color: #2A1B00;
+  border: none;
+  flex-shrink: 0;
+}
+.time-bar {
+  position: relative;
+  flex: 1;
+  background: rgba(10,18,28,0.75);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+}
+.time-bar input[type="range"] {
+  width: 100%;
+  accent-color: var(--amber);
+}
+.time-bar-label {
+  position: absolute;
+  left: 0; right: 0; bottom: -18px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+/* 하단 강수강도 범례 (지도 프레임 안 맨 아래 고정) */
+.legend {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  z-index: 500;
+  display: flex;
+  font-size: 9px;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.6);
+}
+.legend-swatch {
+  flex: 1;
+  padding: 4px 0 3px;
+}
+
+.radar-attribution {
+  font-size: 10px;
+  color: var(--text-dim);
+  text-align: right;
+  margin: 4px 0 10px;
+}
+.radar-attribution a { color: var(--cyan); }
+
+@media (max-width: 420px) {
+  .grid { grid-template-columns: 1fr; }
+}
+

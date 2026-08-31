@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AVBRIEF · 조종사 기상 브리핑</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0A121C">
+<link rel="icon" href="/icons/icon-192.png">
+<!-- iOS 홈 화면 추가 지원 -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AVBRIEF">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">AVBRIEF</span>
+      <span class="brand-sub">조종사 핵심 기상 브리핑</span>
+    </div>
+    <div class="clock" id="utcClock">--:--:-- UTC</div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="radar">레이더</button>
+    <button class="tab" data-tab="field">임의지점 · HLZ 실황</button>
+    <button class="tab" data-tab="station">공항 · METAR/TAF</button>
+  </nav>
+
+  <!-- ===== 공항(METAR/TAF) 탭 ===== -->
+  <section class="panel hidden" id="tab-station">
+    <div class="searchbar">
+      <input id="icaoInput" placeholder="ICAO 코드 입력 (예: RKSI)" maxlength="4" autocomplete="off">
+      <button id="fetchBtn">조회</button>
+    </div>
+    <div class="quicklist" id="quickAirports"></div>
+
+    <div id="stationError" class="error hidden"></div>
+
+    <div id="stationResult" class="hidden">
+
+      <div class="card headline">
+        <div class="fltcat-badge" id="fltCatBadge">--</div>
+        <div class="headline-info">
+          <div class="station-name" id="stationName">-</div>
+          <div class="obs-time" id="obsTime">-</div>
+        </div>
+        <div class="raw-toggle">
+          <button id="rawToggleBtn">RAW METAR</button>
+        </div>
+      </div>
+      <pre class="raw-metar hidden" id="rawMetar"></pre>
+
+      <div class="grid">
+        <div class="card metric">
+          <div class="metric-label">바람 (WIND)</div>
+          <div class="wind-wrap">
+            <svg id="windRose" viewBox="0 0 120 120" class="compass"></svg>
+            <div class="metric-value" id="windValue">-</div>
+          </div>
+        </div>
+
+        <div class="card metric">
+          <div class="metric-label">시정 (VIS)</div>
+          <div class="metric-value" id="visValue">-</div>
+        </div>
+
+        <div class="card metric">
+          <div class="metric-label">운고/운량 (CLOUD)</div>
+          <div class="metric-value small" id="cloudValue">-</div>
+        </div>
+
+        <div class="card metric">
+          <div class="metric-label">기온/이슬점 (T/DP)</div>
+          <div class="metric-value" id="tempValue">-</div>
+        </div>
+
+        <div class="card metric">
+          <div class="metric-label">고도계 (QNH)</div>
+          <div class="metric-value" id="altimValue">-</div>
+        </div>
+
+        <div class="card metric">
+          <div class="metric-label">특이 기상 (WX)</div>
+          <div class="metric-value small" id="wxValue">-</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">활주로 풍향성분 계산 (CROSSWIND)</div>
+        <div class="crosswind-controls">
+          <label>활주로 방위 (°)
+            <input type="number" id="rwyHeading" min="0" max="360" placeholder="예: 140">
+          </label>
+        </div>
+        <div class="crosswind-result" id="crosswindResult">활주로 방위를 입력하세요</div>
+        <svg id="rwyDiagram" viewBox="0 0 200 200" class="rwy-diagram"></svg>
+      </div>
+
+      <div class="card">
+        <div class="section-title">TAF (예보)</div>
+        <div id="tafBody" class="taf-body">-</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== 임의지점(기상청) 탭 ===== -->
+  <section class="panel hidden" id="tab-field">
+    <div class="field-note">공항이 아닌 지점(산불 현장, 헬기 이착륙장 등)의 지상 실황입니다. 기상청 초단기실황 기준이며 시정·운고 정보는 제공되지 않습니다.</div>
+    <div class="searchbar">
+      <input id="latInput" type="number" step="0.0001" placeholder="위도 (예: 37.5665)">
+      <input id="lonInput" type="number" step="0.0001" placeholder="경도 (예: 126.9780)">
+      <button id="kmaFetchBtn">조회</button>
+    </div>
+    <button id="myLocationBtn" class="location-btn">📍 내 위치로 조회</button>
+    <div id="fieldError" class="error hidden"></div>
+    <div id="fieldResult" class="hidden">
+      <div class="grid">
+        <div class="card metric">
+          <div class="metric-label">바람 (WIND)</div>
+          <div class="wind-wrap">
+            <svg id="windRose2" viewBox="0 0 120 120" class="compass"></svg>
+            <div class="metric-value" id="fieldWind">-</div>
+          </div>
+        </div>
+        <div class="card metric">
+          <div class="metric-label">기온 / 습도</div>
+          <div class="metric-value" id="fieldTemp">-</div>
+        </div>
+        <div class="card metric">
+          <div class="metric-label">강수 형태</div>
+          <div class="metric-value" id="fieldPrecip">-</div>
+        </div>
+        <div class="card metric">
+          <div class="metric-label">발표 시각</div>
+          <div class="metric-value small" id="fieldTime">-</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 레이더 탭 ===== -->
+  <section class="panel" id="tab-radar">
+    <div class="radar-frame">
+      <div id="radarMap" class="radar-map-full"></div>
+
+      <div class="radar-overlay-top">
+        <div class="pill-group">
+          <button class="pill-btn active" id="layerPrecipBtn" title="강수">🌧</button>
+          <button class="pill-btn" id="layerCloudBtn" title="구름(전운량)">☁</button>
+        </div>
+        <button class="circle-btn" id="radarMyLocationBtn" title="내 위치">📍</button>
+      </div>
+
+      <div class="radar-weather-row hidden" id="myLocationWeatherRow">
+        <span id="myLocationWeatherText">-</span>
+      </div>
+
+      <div class="radar-overlay-bottom" id="radarOverlayBottom">
+        <button class="circle-btn play-btn" id="radarPlayBtn">▶</button>
+        <div class="time-bar">
+          <input type="range" id="radarSlider" min="0" max="0" value="0">
+          <span id="radarTime" class="time-bar-label">-</span>
+        </div>
+      </div>
+
+      <div class="legend" id="precipLegend"></div>
+    </div>
+
+    <div class="field-note">국내 항공기상청 공식 레이더가 아닌 참고용 데이터입니다. ✈ 표시를 클릭하면 해당 공항의 실시간 METAR 요약을 볼 수 있습니다. "☁ 구름"은 고도 구분 없는 전체 흐림 정도(전운량)이며, 정확한 저고도 구름(운고)은 공항 탭의 METAR를 확인하세요.</div>
+    <div class="radar-attribution">Weather data by <a href="https://www.rainviewer.com" target="_blank" rel="noopener">RainViewer</a> · <a href="https://openweathermap.org" target="_blank" rel="noopener">OpenWeatherMap</a></div>
+  </section>
+
+  <footer class="disclaimer">
+    참고용 브리핑입니다. 실제 비행 결심은 반드시 공식 항공기상청 자료로 재확인하세요.
+  </footer>
+
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script src="app.js"></script>
+</body>
+</html>

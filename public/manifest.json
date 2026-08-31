@@ -1,0 +1,17 @@
+{
+  "name": "AVBRIEF - 조종사 기상 브리핑",
+  "short_name": "AVBRIEF",
+  "description": "METAR/TAF, 크로스윈드 계산, 강수 레이더를 한 곳에서 보는 조종사용 기상 브리핑 앱",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0A121C",
+  "theme_color": "#0A121C",
+  "lang": "ko",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "pilot-weather",
+  "version": "1.0.0",
+  "description": "조종사용 핵심 기상정보 앱 (METAR/TAF + 기상청 실황 + 구름/레이더, Vercel 서버리스 함수)",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
